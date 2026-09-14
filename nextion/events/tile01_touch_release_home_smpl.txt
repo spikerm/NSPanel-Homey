@@ -1,0 +1,6 @@
+// Touch Release Event for tile01_touch on page home_smpl.
+printh 92
+prints "localevent",0
+printh 00
+prints "home_smpl,short_click,tile01",0
+printh 00
