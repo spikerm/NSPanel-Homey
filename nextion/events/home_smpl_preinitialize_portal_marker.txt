@@ -1,0 +1,7 @@
+// Put this in the Preinitialize Event of the EXISTING page "home_smpl".
+// Do NOT create a new page 30: Blackymas v2026041 firmware knows IDs 0..29 only.
+printh 92
+prints "localevent",0
+printh 00
+prints "home_smpl,portal_ready,0.1.1",0
+printh 00
