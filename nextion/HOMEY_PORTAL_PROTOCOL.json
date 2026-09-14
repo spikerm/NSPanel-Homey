@@ -1,0 +1,27 @@
+{
+  "version": "0.8.0",
+  "commands": {
+    "navigate": "portal:navigate:<page>",
+    "header": "portal:header:<title>:<subtitle>:<temperature>",
+    "tile": "portal:tile:<1..8>:<state>:<iconhex>:<info>:<label>",
+    "energy": "portal:energy:<field>:<value>"
+  },
+  "events": {
+    "tile_short": "home_smpl,short_click,tile01",
+    "tile_long": "home_smpl,long_click,tile01",
+    "energy_ready": "utilities,energy_ready,0.1.0"
+  },
+  "physical_page_mapping": {
+    "homeyportal": "home_smpl",
+    "room_lights": "weather01",
+    "room_devices": "weather02",
+    "climate_homey": "climate",
+    "scenes_homey": "weather03",
+    "ev_homey": "weather04",
+    "battery_homey": "weather05",
+    "energy_homey": "utilities",
+    "media_homey": "media_player",
+    "door_homey": "qrcode",
+    "screensaver_homey": "screensaver"
+  }
+}
