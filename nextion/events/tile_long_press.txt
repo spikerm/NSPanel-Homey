@@ -1,0 +1,6 @@
+// Use a Timer for long-press detection, same principle as Blackymas.
+printh 92
+prints "localevent",0
+printh 00
+prints "homeyportal,long_click,tile01",0
+printh 00

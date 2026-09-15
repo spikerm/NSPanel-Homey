@@ -1,0 +1,12 @@
+﻿page_name;display_name;purpose
+homeyportal;Home / Portal;8 portal tiles, time, temperature, Wi-Fi
+room_lights;Woonkamer / lampen;4 light rows, toggle, dim level
+room_devices;Keuken / apparaten;4 appliance rows, state/toggle
+climate_homey;Airco / klimaat;current temp, setpoint, modes, fan, swing
+scenes_homey;Verlichting / scènes;6 scene tiles
+ev_homey;EV / laadpaal;charging state, power, SOC, time, current
+battery_homey;Batterij / energie;SOC ring, charge/discharge/net power
+media_homey;TV / media;apps, volume, source
+door_homey;Deur / toegang;locked state, lock/unlock, history
+menu_homey;Menu;weather, energy, settings, info, restart
+screensaver_homey;Screensaver;time, date, weather, temp

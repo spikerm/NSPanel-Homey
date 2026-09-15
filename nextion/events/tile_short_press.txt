@@ -1,0 +1,6 @@
+// Replace tile01 with the tile number for this hotspot
+printh 92
+prints "localevent",0
+printh 00
+prints "homeyportal,short_click,tile01",0
+printh 00

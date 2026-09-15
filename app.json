@@ -1,0 +1,1960 @@
+{
+  "id": "com.rexm.nspanel",
+  "version": "0.8.0",
+  "compatibility": ">=12.0.0",
+  "sdk": 3,
+  "brandColor": "#20252B",
+  "name": {
+    "en": "NSPanel for Homey",
+    "nl": "NSPanel voor Homey"
+  },
+  "description": {
+    "en": "Direct control of a Sonoff NSPanel running ESPHome.",
+    "nl": "Directe bediening van een Sonoff NSPanel met ESPHome."
+  },
+  "category": [
+    "lights"
+  ],
+  "capabilities": {
+    "nspanel_online": {
+      "type": "boolean",
+      "title": {
+        "en": "Online",
+        "nl": "Online"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
+    },
+    "nspanel_current_page": {
+      "type": "string",
+      "title": {
+        "en": "Current Page",
+        "nl": "Huidige pagina"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
+    },
+    "nspanel_nextion_ok": {
+      "type": "boolean",
+      "title": {
+        "en": "Nextion display",
+        "nl": "Nextion display"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
+    },
+    "nspanel_left_button": {
+      "type": "boolean",
+      "title": {
+        "en": "Left Button",
+        "nl": "Linker knop"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
+    },
+    "nspanel_right_button": {
+      "type": "boolean",
+      "title": {
+        "en": "Right Button",
+        "nl": "Rechter knop"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
+    },
+    "nspanel_relay_1": {
+      "type": "boolean",
+      "title": {
+        "en": "Relay 1",
+        "nl": "Relais 1"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "toggle"
+    },
+    "nspanel_relay_2": {
+      "type": "boolean",
+      "title": {
+        "en": "Relay 2",
+        "nl": "Relais 2"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "toggle"
+    },
+    "nspanel_brightness": {
+      "type": "number",
+      "title": {
+        "en": "Display Brightness",
+        "nl": "Schermhelderheid"
+      },
+      "getable": true,
+      "setable": true,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "units": {
+        "en": "%",
+        "nl": "%"
+      },
+      "uiComponent": "slider"
+    },
+    "nspanel_brightness_dim": {
+      "type": "number",
+      "title": {
+        "en": "Dim Brightness",
+        "nl": "Dimhelderheid"
+      },
+      "getable": true,
+      "setable": true,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "units": {
+        "en": "%",
+        "nl": "%"
+      },
+      "uiComponent": "slider"
+    },
+    "nspanel_brightness_sleep": {
+      "type": "number",
+      "title": {
+        "en": "Sleep Brightness",
+        "nl": "Slaaphelderheid"
+      },
+      "getable": true,
+      "setable": true,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "units": {
+        "en": "%",
+        "nl": "%"
+      },
+      "uiComponent": "slider"
+    },
+    "nspanel_sound_notification": {
+      "type": "boolean",
+      "title": {
+        "en": "Notification Sound",
+        "nl": "Notificatiegeluid"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "toggle"
+    },
+    "nspanel_timeout_dim": {
+      "type": "number",
+      "title": {
+        "en": "Timeout Dimming",
+        "nl": "Timeout dimmen"
+      },
+      "getable": true,
+      "setable": true,
+      "min": 0,
+      "max": 86400,
+      "step": 1,
+      "units": {
+        "en": "s",
+        "nl": "s"
+      },
+      "uiComponent": "sensor"
+    },
+    "nspanel_timeout_page": {
+      "type": "number",
+      "title": {
+        "en": "Timeout Page",
+        "nl": "Timeout pagina"
+      },
+      "getable": true,
+      "setable": true,
+      "min": 0,
+      "max": 86400,
+      "step": 1,
+      "units": {
+        "en": "s",
+        "nl": "s"
+      },
+      "uiComponent": "sensor"
+    },
+    "nspanel_timeout_sleep": {
+      "type": "number",
+      "title": {
+        "en": "Timeout Sleep",
+        "nl": "Timeout slaap"
+      },
+      "getable": true,
+      "setable": true,
+      "min": 0,
+      "max": 86400,
+      "step": 1,
+      "units": {
+        "en": "s",
+        "nl": "s"
+      },
+      "uiComponent": "sensor"
+    },
+    "nspanel_wakeup_page": {
+      "type": "string",
+      "title": {
+        "en": "Wake-up Page",
+        "nl": "Wake-up pagina"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
+    },
+    "nspanel_connection": {
+      "type": "string",
+      "title": {
+        "en": "Connection",
+        "nl": "Verbinding"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
+    },
+    "nspanel_version_esphome": {
+      "type": "string",
+      "title": {
+        "en": "ESPHome Version",
+        "nl": "ESPHome-versie"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
+    },
+    "nspanel_version_tft": {
+      "type": "string",
+      "title": {
+        "en": "TFT Version",
+        "nl": "TFT-versie"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
+    },
+    "nspanel_version_blueprint": {
+      "type": "string",
+      "title": {
+        "en": "Blueprint Version",
+        "nl": "Blueprint-versie"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
+    },
+    "nspanel_bridge_ready": {
+      "type": "boolean",
+      "title": {
+        "en": "Homey Display Bridge",
+        "nl": "Homey Display Bridge"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
+    },
+    "nspanel_bridge_version": {
+      "type": "string",
+      "title": {
+        "en": "Bridge Version",
+        "nl": "Bridge-versie"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor"
+    }
+  },
+  "drivers": [
+    {
+      "id": "nspanel",
+      "name": {
+        "en": "Sonoff NSPanel",
+        "nl": "Sonoff NSPanel"
+      },
+      "class": "other",
+      "capabilities": [
+        "nspanel_online",
+        "measure_temperature",
+        "nspanel_current_page",
+        "nspanel_nextion_ok",
+        "nspanel_left_button",
+        "nspanel_right_button",
+        "nspanel_relay_1",
+        "nspanel_relay_2",
+        "nspanel_brightness",
+        "nspanel_brightness_dim",
+        "nspanel_brightness_sleep",
+        "nspanel_sound_notification",
+        "nspanel_timeout_dim",
+        "nspanel_timeout_page",
+        "nspanel_timeout_sleep",
+        "nspanel_wakeup_page",
+        "nspanel_connection",
+        "nspanel_version_blueprint",
+        "nspanel_version_esphome",
+        "nspanel_version_tft",
+        "nspanel_bridge_ready",
+        "nspanel_bridge_version"
+      ],
+      "settings": [
+        {
+          "id": "host",
+          "type": "text",
+          "label": {
+            "en": "IP address / hostname",
+            "nl": "IP-adres / hostnaam"
+          },
+          "value": "wandpaneel.local"
+        },
+        {
+          "id": "username",
+          "type": "text",
+          "label": {
+            "en": "Web username",
+            "nl": "Web gebruikersnaam"
+          },
+          "value": ""
+        },
+        {
+          "id": "password",
+          "type": "password",
+          "label": {
+            "en": "Web password",
+            "nl": "Web wachtwoord"
+          },
+          "value": ""
+        },
+        {
+          "id": "entity_relay1",
+          "type": "text",
+          "label": {
+            "en": "Relay 1 entity",
+            "nl": "Relais 1 entiteit"
+          },
+          "value": "Relay 1"
+        },
+        {
+          "id": "entity_relay2",
+          "type": "text",
+          "label": {
+            "en": "Relay 2 entity",
+            "nl": "Relais 2 entiteit"
+          },
+          "value": "Relay 2"
+        },
+        {
+          "id": "entity_temperature",
+          "type": "text",
+          "label": {
+            "en": "Temperature entity",
+            "nl": "Temperatuur entiteit"
+          },
+          "value": "Temperature"
+        },
+        {
+          "id": "entity_current_page",
+          "type": "text",
+          "label": {
+            "en": "Current Page entity",
+            "nl": "Huidige pagina entiteit"
+          },
+          "value": "Current Page"
+        },
+        {
+          "id": "entity_nextion",
+          "type": "text",
+          "label": {
+            "en": "Nextion entity",
+            "nl": "Nextion entiteit"
+          },
+          "value": "Nextion display"
+        },
+        {
+          "id": "entity_left_button",
+          "type": "text",
+          "label": {
+            "en": "Left Button entity",
+            "nl": "Linker knop entiteit"
+          },
+          "value": "Left Button"
+        },
+        {
+          "id": "entity_right_button",
+          "type": "text",
+          "label": {
+            "en": "Right Button entity",
+            "nl": "Rechter knop entiteit"
+          },
+          "value": "Right Button"
+        },
+        {
+          "id": "entity_brightness",
+          "type": "text",
+          "label": {
+            "en": "Display Brightness entity",
+            "nl": "Schermhelderheid entiteit"
+          },
+          "value": "Display Brightness"
+        },
+        {
+          "id": "entity_brightness_dim",
+          "type": "text",
+          "label": {
+            "en": "Dimdown Brightness entity",
+            "nl": "Dimhelderheid entiteit"
+          },
+          "value": "Display Brightness Dimdown"
+        },
+        {
+          "id": "entity_brightness_sleep",
+          "type": "text",
+          "label": {
+            "en": "Sleep Brightness entity",
+            "nl": "Slaaphelderheid entiteit"
+          },
+          "value": "Display Brightness Sleep"
+        },
+        {
+          "id": "entity_sound",
+          "type": "text",
+          "label": {
+            "en": "Notification Sound entity",
+            "nl": "Notificatiegeluid entiteit"
+          },
+          "value": "Sound - Notification"
+        },
+        {
+          "id": "entity_timeout_dim",
+          "type": "text",
+          "label": {
+            "en": "Timeout Dimming entity",
+            "nl": "Timeout dimmen entiteit"
+          },
+          "value": "Timeout Dimming"
+        },
+        {
+          "id": "entity_timeout_page",
+          "type": "text",
+          "label": {
+            "en": "Timeout Page entity",
+            "nl": "Timeout pagina entiteit"
+          },
+          "value": "Timeout Page"
+        },
+        {
+          "id": "entity_timeout_sleep",
+          "type": "text",
+          "label": {
+            "en": "Timeout Sleep entity",
+            "nl": "Timeout slaap entiteit"
+          },
+          "value": "Timeout Sleep"
+        },
+        {
+          "id": "entity_wakeup_page",
+          "type": "text",
+          "label": {
+            "en": "Wake-up Page entity",
+            "nl": "Wake-up pagina entiteit"
+          },
+          "value": "Wake-up page"
+        },
+        {
+          "id": "entity_restart",
+          "type": "text",
+          "label": {
+            "en": "Restart button entity",
+            "nl": "Herstart knop entiteit"
+          },
+          "value": "Restart"
+        },
+        {
+          "id": "entity_update_tft",
+          "type": "text",
+          "label": {
+            "en": "Update TFT button entity",
+            "nl": "TFT-update knop entiteit"
+          },
+          "value": "Update TFT display"
+        },
+        {
+          "id": "entity_version_blueprint",
+          "type": "text",
+          "label": {
+            "en": "Blueprint Version entity",
+            "nl": "Blueprint-versie entiteit"
+          },
+          "value": "Version Blueprint"
+        },
+        {
+          "id": "entity_version_esphome",
+          "type": "text",
+          "label": {
+            "en": "ESPHome Version entity",
+            "nl": "ESPHome-versie entiteit"
+          },
+          "value": "Version ESPHome"
+        },
+        {
+          "id": "entity_version_tft",
+          "type": "text",
+          "label": {
+            "en": "TFT Version entity",
+            "nl": "TFT-versie entiteit"
+          },
+          "value": "Version TFT"
+        },
+        {
+          "id": "entity_homey_command",
+          "type": "text",
+          "label": {
+            "en": "Homey Display Command entity",
+            "nl": "Homey Display Command entiteit"
+          },
+          "value": "Homey Display Command"
+        },
+        {
+          "id": "entity_homey_bridge_version",
+          "type": "text",
+          "label": {
+            "en": "Homey Bridge Version entity",
+            "nl": "Homey Bridge Version entiteit"
+          },
+          "value": "Homey Bridge Version"
+        },
+        {
+          "id": "entity_homey_last_button",
+          "type": "text",
+          "label": {
+            "en": "Homey Last Button entity",
+            "nl": "Homey Last Button entiteit"
+          },
+          "value": "Homey Last Button"
+        },
+        {
+          "id": "homey_page1_auto_show",
+          "type": "checkbox",
+          "label": {
+            "en": "Show Homey button page after connect",
+            "nl": "Toon Homey knoppenpagina na verbinden"
+          },
+          "value": true
+        },
+        {
+          "id": "homey_page1_title",
+          "type": "text",
+          "label": {
+            "en": "Button page 1 title",
+            "nl": "Titel knoppenpagina 1"
+          },
+          "value": "Homey"
+        },
+        {
+          "id": "homey_page1_button1_label",
+          "type": "text",
+          "label": {
+            "en": "Button 1 label",
+            "nl": "Knop 1 tekst"
+          },
+          "value": "Woonkamer"
+        },
+        {
+          "id": "homey_page1_button2_label",
+          "type": "text",
+          "label": {
+            "en": "Button 2 label",
+            "nl": "Knop 2 tekst"
+          },
+          "value": "Keuken"
+        },
+        {
+          "id": "homey_page1_button3_label",
+          "type": "text",
+          "label": {
+            "en": "Button 3 label",
+            "nl": "Knop 3 tekst"
+          },
+          "value": "Airco"
+        },
+        {
+          "id": "homey_page1_button4_label",
+          "type": "text",
+          "label": {
+            "en": "Button 4 label",
+            "nl": "Knop 4 tekst"
+          },
+          "value": "Verlichting"
+        },
+        {
+          "id": "homey_page1_button5_label",
+          "type": "text",
+          "label": {
+            "en": "Button 5 label",
+            "nl": "Knop 5 tekst"
+          },
+          "value": "TV"
+        },
+        {
+          "id": "homey_page1_button6_label",
+          "type": "text",
+          "label": {
+            "en": "Button 6 label",
+            "nl": "Knop 6 tekst"
+          },
+          "value": "Deur"
+        },
+        {
+          "id": "homey_page1_button7_label",
+          "type": "text",
+          "label": {
+            "en": "Button 7 label",
+            "nl": "Knop 7 tekst"
+          },
+          "value": "EV"
+        },
+        {
+          "id": "homey_page1_button8_label",
+          "type": "text",
+          "label": {
+            "en": "Button 8 label",
+            "nl": "Knop 8 tekst"
+          },
+          "value": "Batterij"
+        },
+        {
+          "id": "homey_page1_button1_icon",
+          "type": "text",
+          "label": {
+            "en": "Button 1 icon code",
+            "nl": "Knop 1 icooncode"
+          },
+          "value": "F4B8"
+        },
+        {
+          "id": "homey_page1_button1_info",
+          "type": "text",
+          "label": {
+            "en": "Button 1 info",
+            "nl": "Knop 1 info"
+          },
+          "value": ""
+        },
+        {
+          "id": "homey_page1_button2_icon",
+          "type": "text",
+          "label": {
+            "en": "Button 2 icon code",
+            "nl": "Knop 2 icooncode"
+          },
+          "value": "F18D"
+        },
+        {
+          "id": "homey_page1_button2_info",
+          "type": "text",
+          "label": {
+            "en": "Button 2 info",
+            "nl": "Knop 2 info"
+          },
+          "value": ""
+        },
+        {
+          "id": "homey_page1_button3_icon",
+          "type": "text",
+          "label": {
+            "en": "Button 3 icon code",
+            "nl": "Knop 3 icooncode"
+          },
+          "value": "F001"
+        },
+        {
+          "id": "homey_page1_button3_info",
+          "type": "text",
+          "label": {
+            "en": "Button 3 info",
+            "nl": "Knop 3 info"
+          },
+          "value": ""
+        },
+        {
+          "id": "homey_page1_button4_icon",
+          "type": "text",
+          "label": {
+            "en": "Button 4 icon code",
+            "nl": "Knop 4 icooncode"
+          },
+          "value": "E6E8"
+        },
+        {
+          "id": "homey_page1_button4_info",
+          "type": "text",
+          "label": {
+            "en": "Button 4 info",
+            "nl": "Knop 4 info"
+          },
+          "value": ""
+        },
+        {
+          "id": "homey_page1_button5_icon",
+          "type": "text",
+          "label": {
+            "en": "Button 5 icon code",
+            "nl": "Knop 5 icooncode"
+          },
+          "value": "F502"
+        },
+        {
+          "id": "homey_page1_button5_info",
+          "type": "text",
+          "label": {
+            "en": "Button 5 info",
+            "nl": "Knop 5 info"
+          },
+          "value": ""
+        },
+        {
+          "id": "homey_page1_button6_icon",
+          "type": "text",
+          "label": {
+            "en": "Button 6 icon code",
+            "nl": "Knop 6 icooncode"
+          },
+          "value": "F81A"
+        },
+        {
+          "id": "homey_page1_button6_info",
+          "type": "text",
+          "label": {
+            "en": "Button 6 info",
+            "nl": "Knop 6 info"
+          },
+          "value": ""
+        },
+        {
+          "id": "homey_page1_button7_icon",
+          "type": "text",
+          "label": {
+            "en": "Button 7 icon code",
+            "nl": "Knop 7 icooncode"
+          },
+          "value": "F5B6"
+        },
+        {
+          "id": "homey_page1_button7_info",
+          "type": "text",
+          "label": {
+            "en": "Button 7 info",
+            "nl": "Knop 7 info"
+          },
+          "value": ""
+        },
+        {
+          "id": "homey_page1_button8_icon",
+          "type": "text",
+          "label": {
+            "en": "Button 8 icon code",
+            "nl": "Knop 8 icooncode"
+          },
+          "value": "F190"
+        },
+        {
+          "id": "homey_page1_button8_info",
+          "type": "text",
+          "label": {
+            "en": "Button 8 info",
+            "nl": "Knop 8 info"
+          },
+          "value": ""
+        },
+        {
+          "id": "homey_page1_icon_font",
+          "type": "number",
+          "label": {
+            "en": "Button icon font",
+            "nl": "Knoppen icoonfont"
+          },
+          "value": 8,
+          "min": 0,
+          "max": 20,
+          "step": 1
+        },
+        {
+          "id": "homey_page1_icon_color",
+          "type": "text",
+          "label": {
+            "en": "Button icon color (R,G,B)",
+            "nl": "Knoppen icoonkleur (R,G,B)"
+          },
+          "value": "255,255,255"
+        },
+        {
+          "id": "portal_title",
+          "type": "text",
+          "label": {
+            "en": "Portal title",
+            "nl": "Portal titel"
+          },
+          "value": "Home"
+        },
+        {
+          "id": "portal_subtitle",
+          "type": "text",
+          "label": {
+            "en": "Portal subtitle",
+            "nl": "Portal subtitel"
+          },
+          "value": "Homey"
+        },
+        {
+          "id": "portal_show_temperature",
+          "type": "checkbox",
+          "label": {
+            "en": "Show panel temperature",
+            "nl": "Toon paneeltemperatuur"
+          },
+          "value": true
+        },
+        {
+          "id": "entity_homey_portal_tft_url",
+          "type": "text",
+          "label": {
+            "en": "Homey Portal TFT URL entity",
+            "nl": "Homey Portal TFT URL entiteit"
+          },
+          "value": "Homey Portal TFT URL"
+        },
+        {
+          "id": "entity_homey_portal_tft_upload",
+          "type": "text",
+          "label": {
+            "en": "Upload Homey Portal TFT entity",
+            "nl": "Upload Homey Portal TFT entiteit"
+          },
+          "value": "Upload Homey Portal TFT"
+        },
+        {
+          "id": "entity_homey_standard_tft_upload",
+          "type": "text",
+          "label": {
+            "en": "Restore Standard TFT entity",
+            "nl": "Herstel standaard TFT entiteit"
+          },
+          "value": "Upload Standard NSPanel EU TFT"
+        },
+        {
+          "id": "entity_homey_portal_tft_version",
+          "type": "text",
+          "label": {
+            "en": "Homey Portal TFT Version entity",
+            "nl": "Homey Portal TFT Version entiteit"
+          },
+          "value": "Homey Portal TFT Version"
+        }
+      ],
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "options": {
+            "singular": true
+          },
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "images": {
+        "small": "/drivers/nspanel/assets/images/small.png",
+        "large": "/drivers/nspanel/assets/images/large.png"
+      }
+    }
+  ],
+  "flow": {
+    "triggers": [
+      {
+        "id": "left_button_pressed",
+        "title": {
+          "en": "Left hardware button is pressed",
+          "nl": "Linker fysieke knop wordt ingedrukt"
+        },
+        "tokens": [],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      },
+      {
+        "id": "right_button_pressed",
+        "title": {
+          "en": "Right hardware button is pressed",
+          "nl": "Rechter fysieke knop wordt ingedrukt"
+        },
+        "tokens": [],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      },
+      {
+        "id": "page_changed",
+        "title": {
+          "en": "Current page changed",
+          "nl": "Huidige pagina is gewijzigd"
+        },
+        "tokens": [
+          {
+            "name": "page",
+            "type": "string",
+            "title": {
+              "en": "Page",
+              "nl": "Pagina"
+            }
+          }
+        ],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      },
+      {
+        "id": "panel_online",
+        "title": {
+          "en": "NSPanel comes online",
+          "nl": "NSPanel komt online"
+        },
+        "tokens": [],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      },
+      {
+        "id": "panel_offline",
+        "title": {
+          "en": "NSPanel goes offline",
+          "nl": "NSPanel gaat offline"
+        },
+        "tokens": [],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      },
+      {
+        "id": "homey_button_pressed",
+        "title": {
+          "en": "A Homey screen button is pressed",
+          "nl": "Een Homey schermknop wordt ingedrukt"
+        },
+        "tokens": [
+          {
+            "name": "page",
+            "type": "string",
+            "title": {
+              "en": "Page",
+              "nl": "Pagina"
+            }
+          },
+          {
+            "name": "button",
+            "type": "string",
+            "title": {
+              "en": "Button",
+              "nl": "Knop"
+            }
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "title": {
+              "en": "Label",
+              "nl": "Tekst"
+            }
+          },
+          {
+            "name": "press",
+            "type": "string",
+            "title": {
+              "en": "Press type",
+              "nl": "Druktype"
+            }
+          }
+        ],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "restart_panel",
+        "title": {
+          "en": "Restart NSPanel",
+          "nl": "Herstart NSPanel"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      },
+      {
+        "id": "update_tft",
+        "title": {
+          "en": "Start TFT update",
+          "nl": "Start TFT-update"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      },
+      {
+        "id": "set_brightness",
+        "title": {
+          "en": "Set display brightness",
+          "nl": "Stel schermhelderheid in"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "title": {
+              "en": "Brightness",
+              "nl": "Helderheid"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Set display brightness to [[value]]%",
+          "nl": "Stel schermhelderheid in op [[value]]%"
+        }
+      },
+      {
+        "id": "set_dim_brightness",
+        "title": {
+          "en": "Set dim brightness",
+          "nl": "Stel dimhelderheid in"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "title": {
+              "en": "Brightness",
+              "nl": "Helderheid"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Set dim brightness to [[value]]%",
+          "nl": "Stel dimhelderheid in op [[value]]%"
+        }
+      },
+      {
+        "id": "set_sleep_brightness",
+        "title": {
+          "en": "Set sleep brightness",
+          "nl": "Stel slaaphelderheid in"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "title": {
+              "en": "Brightness",
+              "nl": "Helderheid"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Set sleep brightness to [[value]]%",
+          "nl": "Stel slaaphelderheid in op [[value]]%"
+        }
+      },
+      {
+        "id": "set_timeout_dim",
+        "title": {
+          "en": "Set dim timeout",
+          "nl": "Stel timeout dimmen in"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "seconds",
+            "type": "number",
+            "min": 0,
+            "max": 86400,
+            "step": 1,
+            "title": {
+              "en": "Seconds",
+              "nl": "Seconden"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Set dim timeout to [[seconds]] seconds",
+          "nl": "Stel timeout dimmen in op [[seconds]] seconden"
+        }
+      },
+      {
+        "id": "set_timeout_page",
+        "title": {
+          "en": "Set page timeout",
+          "nl": "Stel timeout pagina in"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "seconds",
+            "type": "number",
+            "min": 0,
+            "max": 86400,
+            "step": 1,
+            "title": {
+              "en": "Seconds",
+              "nl": "Seconden"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Set page timeout to [[seconds]] seconds",
+          "nl": "Stel timeout pagina in op [[seconds]] seconden"
+        }
+      },
+      {
+        "id": "set_timeout_sleep",
+        "title": {
+          "en": "Set sleep timeout",
+          "nl": "Stel timeout slaap in"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "seconds",
+            "type": "number",
+            "min": 0,
+            "max": 86400,
+            "step": 1,
+            "title": {
+              "en": "Seconds",
+              "nl": "Seconden"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Set sleep timeout to [[seconds]] seconds",
+          "nl": "Stel timeout slaap in op [[seconds]] seconden"
+        }
+      },
+      {
+        "id": "set_notification_sound",
+        "title": {
+          "en": "Set notification sound",
+          "nl": "Stel notificatiegeluid in"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "enabled",
+            "type": "checkbox",
+            "title": {
+              "en": "Enabled",
+              "nl": "Ingeschakeld"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Set notification sound to [[enabled]]",
+          "nl": "Stel notificatiegeluid in op [[enabled]]"
+        }
+      },
+      {
+        "id": "set_wakeup_page",
+        "title": {
+          "en": "Set wake-up page",
+          "nl": "Stel wake-up pagina in"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "page",
+            "type": "text",
+            "title": {
+              "en": "Page",
+              "nl": "Pagina"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Set wake-up page to [[page]]",
+          "nl": "Stel wake-up pagina in op [[page]]"
+        }
+      },
+      {
+        "id": "display_command",
+        "title": {
+          "en": "Send raw display command",
+          "nl": "Stuur display-commando"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "command",
+            "type": "text",
+            "title": {
+              "en": "Command",
+              "nl": "Commando"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Send display command [[command]]",
+          "nl": "Stuur display-commando [[command]]"
+        }
+      },
+      {
+        "id": "display_page",
+        "title": {
+          "en": "Show display page",
+          "nl": "Toon displaypagina"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "page",
+            "type": "text",
+            "title": {
+              "en": "Page",
+              "nl": "Pagina"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Show page [[page]]",
+          "nl": "Toon pagina [[page]]"
+        }
+      },
+      {
+        "id": "display_text",
+        "title": {
+          "en": "Set display text",
+          "nl": "Stel displaytekst in"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "page",
+            "type": "text",
+            "title": {
+              "en": "Page",
+              "nl": "Pagina"
+            }
+          },
+          {
+            "name": "component",
+            "type": "text",
+            "title": {
+              "en": "Component",
+              "nl": "Component"
+            }
+          },
+          {
+            "name": "text",
+            "type": "text",
+            "title": {
+              "en": "Text",
+              "nl": "Tekst"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Set [[page]].[[component]] text to [[text]]",
+          "nl": "Stel tekst van [[page]].[[component]] in op [[text]]"
+        }
+      },
+      {
+        "id": "display_value",
+        "title": {
+          "en": "Set display value",
+          "nl": "Stel displaywaarde in"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "page",
+            "type": "text",
+            "title": {
+              "en": "Page",
+              "nl": "Pagina"
+            }
+          },
+          {
+            "name": "component",
+            "type": "text",
+            "title": {
+              "en": "Component",
+              "nl": "Component"
+            }
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "title": {
+              "en": "Value",
+              "nl": "Waarde"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Set [[page]].[[component]] to [[value]]",
+          "nl": "Stel [[page]].[[component]] in op [[value]]"
+        }
+      },
+      {
+        "id": "display_visibility",
+        "title": {
+          "en": "Set component visibility",
+          "nl": "Stel componentzichtbaarheid in"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "page",
+            "type": "text",
+            "title": {
+              "en": "Page",
+              "nl": "Pagina"
+            }
+          },
+          {
+            "name": "component",
+            "type": "text",
+            "title": {
+              "en": "Component",
+              "nl": "Component"
+            }
+          },
+          {
+            "name": "visible",
+            "type": "checkbox",
+            "title": {
+              "en": "Visible",
+              "nl": "Zichtbaar"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Set [[page]].[[component]] visibility to [[visible]]",
+          "nl": "Stel zichtbaarheid van [[page]].[[component]] in op [[visible]]"
+        }
+      },
+      {
+        "id": "show_homey_page1",
+        "title": {
+          "en": "Show Homey button page 1",
+          "nl": "Toon Homey knoppenpagina 1"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      },
+      {
+        "id": "set_homey_page1_button",
+        "title": {
+          "en": "Set Homey page 1 button",
+          "nl": "Stel Homey pagina 1 knop in"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "button",
+            "type": "number",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "title": {
+              "en": "Button",
+              "nl": "Knop"
+            }
+          },
+          {
+            "name": "label",
+            "type": "text",
+            "title": {
+              "en": "Label",
+              "nl": "Tekst"
+            }
+          },
+          {
+            "name": "state",
+            "type": "checkbox",
+            "title": {
+              "en": "On state",
+              "nl": "Aan-status"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Set button [[button]] to [[label]] (state: [[state]])",
+          "nl": "Stel knop [[button]] in op [[label]] (status: [[state]])"
+        }
+      },
+      {
+        "id": "test_homey_page1_button",
+        "title": {
+          "en": "Test Homey page 1 button",
+          "nl": "Test Homey pagina 1 knop"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "button",
+            "type": "number",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "title": {
+              "en": "Button",
+              "nl": "Knop"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Test button [[button]]",
+          "nl": "Test knop [[button]]"
+        }
+      },
+      {
+        "id": "set_homey_page1_button_full",
+        "title": {
+          "en": "Set Homey page 1 button with icon",
+          "nl": "Stel Homey pagina 1 knop met icoon in"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "button",
+            "type": "number",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "title": {
+              "en": "Button",
+              "nl": "Knop"
+            }
+          },
+          {
+            "name": "label",
+            "type": "text",
+            "title": {
+              "en": "Label",
+              "nl": "Tekst"
+            }
+          },
+          {
+            "name": "state",
+            "type": "checkbox",
+            "title": {
+              "en": "On state",
+              "nl": "Aan-status"
+            }
+          },
+          {
+            "name": "icon",
+            "type": "text",
+            "title": {
+              "en": "Icon code (hex)",
+              "nl": "Icooncode (hex)"
+            }
+          },
+          {
+            "name": "info",
+            "type": "text",
+            "title": {
+              "en": "Info / brightness",
+              "nl": "Info / helderheid"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Set button [[button]] [[label]] state [[state]] icon [[icon]] info [[info]]",
+          "nl": "Stel knop [[button]] [[label]] status [[state]] icoon [[icon]] info [[info]] in"
+        }
+      },
+      {
+        "id": "show_homey_portal",
+        "title": {
+          "en": "Show Homey Portal",
+          "nl": "Toon Homey Portal"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      },
+      {
+        "id": "set_portal_tile",
+        "title": {
+          "en": "Set Homey Portal tile",
+          "nl": "Stel Homey Portal tegel in"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "tile",
+            "type": "number",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "title": {
+              "en": "Tile",
+              "nl": "Tegel"
+            }
+          },
+          {
+            "name": "label",
+            "type": "text",
+            "title": {
+              "en": "Label",
+              "nl": "Tekst"
+            }
+          },
+          {
+            "name": "state",
+            "type": "checkbox",
+            "title": {
+              "en": "On",
+              "nl": "Aan"
+            }
+          },
+          {
+            "name": "icon",
+            "type": "text",
+            "title": {
+              "en": "Icon code",
+              "nl": "Icooncode"
+            }
+          },
+          {
+            "name": "info",
+            "type": "text",
+            "title": {
+              "en": "Info",
+              "nl": "Info"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Set tile [[tile]] [[label]] state [[state]] icon [[icon]] info [[info]]",
+          "nl": "Stel tegel [[tile]] [[label]] status [[state]] icoon [[icon]] info [[info]] in"
+        }
+      },
+      {
+        "id": "upload_homey_portal_tft",
+        "title": {
+          "en": "Upload Homey Portal TFT",
+          "nl": "Upload Homey Portal TFT"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "url",
+            "type": "text",
+            "title": {
+              "en": "TFT URL",
+              "nl": "TFT URL"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Upload Homey Portal TFT from [[url]]",
+          "nl": "Upload Homey Portal TFT vanaf [[url]]"
+        }
+      },
+      {
+        "id": "restore_standard_tft",
+        "title": {
+          "en": "Restore standard NSPanel EU TFT",
+          "nl": "Herstel standaard NSPanel EU TFT"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      },
+      {
+        "id": "show_portal_page",
+        "title": {
+          "en": "Show Homey Portal page",
+          "nl": "Toon Homey Portal pagina"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "page",
+            "type": "dropdown",
+            "title": {
+              "en": "Page",
+              "nl": "Pagina"
+            },
+            "values": [
+              {
+                "id": "homeyportal",
+                "label": {
+                  "en": "Home",
+                  "nl": "Home"
+                }
+              },
+              {
+                "id": "room_lights",
+                "label": {
+                  "en": "Living room / lights",
+                  "nl": "Woonkamer / lampen"
+                }
+              },
+              {
+                "id": "room_devices",
+                "label": {
+                  "en": "Kitchen / devices",
+                  "nl": "Keuken / apparaten"
+                }
+              },
+              {
+                "id": "climate_homey",
+                "label": {
+                  "en": "Climate",
+                  "nl": "Klimaat"
+                }
+              },
+              {
+                "id": "scenes_homey",
+                "label": {
+                  "en": "Lighting scenes",
+                  "nl": "Verlichting / scènes"
+                }
+              },
+              {
+                "id": "ev_homey",
+                "label": {
+                  "en": "EV charging",
+                  "nl": "EV / laden"
+                }
+              },
+              {
+                "id": "battery_homey",
+                "label": {
+                  "en": "Battery / energy",
+                  "nl": "Batterij / energie"
+                }
+              },
+              {
+                "id": "media_homey",
+                "label": {
+                  "en": "TV / media",
+                  "nl": "TV / media"
+                }
+              },
+              {
+                "id": "door_homey",
+                "label": {
+                  "en": "Door / access",
+                  "nl": "Deur / toegang"
+                }
+              },
+              {
+                "id": "menu_homey",
+                "label": {
+                  "en": "Menu",
+                  "nl": "Menu"
+                }
+              },
+              {
+                "id": "screensaver_homey",
+                "label": {
+                  "en": "Screensaver",
+                  "nl": "Screensaver"
+                }
+              },
+              {
+                "id": "energy_homey",
+                "label": {
+                  "en": "Energy",
+                  "nl": "Energie"
+                }
+              }
+            ]
+          }
+        ],
+        "titleFormatted": {
+          "en": "Show Homey Portal page [[page]]",
+          "nl": "Toon Homey Portal pagina [[page]]"
+        }
+      },
+      {
+        "id": "set_energy_field",
+        "title": {
+          "en": "Set Energy page value",
+          "nl": "Stel Energy-paginawaarde in"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "field",
+            "type": "dropdown",
+            "title": {
+              "en": "Field",
+              "nl": "Veld"
+            },
+            "values": [
+              {
+                "id": "solar_power",
+                "label": {
+                  "en": "Solar power",
+                  "nl": "Zonnevermogen"
+                }
+              },
+              {
+                "id": "solar_today",
+                "label": {
+                  "en": "Solar today",
+                  "nl": "Zon vandaag"
+                }
+              },
+              {
+                "id": "battery_soc",
+                "label": {
+                  "en": "Battery SOC",
+                  "nl": "Batterij SOC"
+                }
+              },
+              {
+                "id": "battery_power",
+                "label": {
+                  "en": "Battery power",
+                  "nl": "Batterij vermogen"
+                }
+              },
+              {
+                "id": "battery_state",
+                "label": {
+                  "en": "Battery state",
+                  "nl": "Batterij status"
+                }
+              },
+              {
+                "id": "ev_power",
+                "label": {
+                  "en": "EV power",
+                  "nl": "EV vermogen"
+                }
+              },
+              {
+                "id": "ev_current",
+                "label": {
+                  "en": "EV current",
+                  "nl": "EV stroom"
+                }
+              },
+              {
+                "id": "ev_state",
+                "label": {
+                  "en": "EV state",
+                  "nl": "EV status"
+                }
+              },
+              {
+                "id": "grid_power",
+                "label": {
+                  "en": "Grid power",
+                  "nl": "Netvermogen"
+                }
+              },
+              {
+                "id": "grid_state",
+                "label": {
+                  "en": "Grid state",
+                  "nl": "Net status"
+                }
+              },
+              {
+                "id": "home_power",
+                "label": {
+                  "en": "Home power",
+                  "nl": "Huisverbruik"
+                }
+              },
+              {
+                "id": "time",
+                "label": {
+                  "en": "Time",
+                  "nl": "Tijd"
+                }
+              },
+              {
+                "id": "temperature",
+                "label": {
+                  "en": "Temperature",
+                  "nl": "Temperatuur"
+                }
+              }
+            ]
+          },
+          {
+            "name": "value",
+            "type": "text",
+            "title": {
+              "en": "Value",
+              "nl": "Waarde"
+            }
+          }
+        ],
+        "titleFormatted": {
+          "en": "Set Energy [[field]] to [[value]]",
+          "nl": "Zet Energy [[field]] op [[value]]"
+        }
+      }
+    ]
+  },
+  "author": {
+    "name": "Rex Markesteijn"
+  },
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png"
+  }
+}

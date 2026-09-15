@@ -1,0 +1,121 @@
+﻿page;component;type;x;y;width;height;notes
+homeyportal;hdr_back;Hotspot;0;0;42;40;"Back; hidden on homeyportal"
+homeyportal;hdr_icon;Text;48;4;32;32;icon font
+homeyportal;hdr_title;Text;84;4;250;32;page title
+homeyportal;hdr_time;Text;390;4;80;32;HH:MM
+homeyportal;nav_home;Hotspot;0;282;120;38;go homeyportal
+homeyportal;nav_back;Hotspot;360;282;120;38;go previous page
+room_lights;hdr_back;Hotspot;0;0;42;40;"Back; hidden on homeyportal"
+room_lights;hdr_icon;Text;48;4;32;32;icon font
+room_lights;hdr_title;Text;84;4;250;32;page title
+room_lights;hdr_time;Text;390;4;80;32;HH:MM
+room_lights;nav_home;Hotspot;0;282;120;38;go homeyportal
+room_lights;nav_back;Hotspot;360;282;120;38;go previous page
+room_devices;hdr_back;Hotspot;0;0;42;40;"Back; hidden on homeyportal"
+room_devices;hdr_icon;Text;48;4;32;32;icon font
+room_devices;hdr_title;Text;84;4;250;32;page title
+room_devices;hdr_time;Text;390;4;80;32;HH:MM
+room_devices;nav_home;Hotspot;0;282;120;38;go homeyportal
+room_devices;nav_back;Hotspot;360;282;120;38;go previous page
+climate_homey;hdr_back;Hotspot;0;0;42;40;"Back; hidden on homeyportal"
+climate_homey;hdr_icon;Text;48;4;32;32;icon font
+climate_homey;hdr_title;Text;84;4;250;32;page title
+climate_homey;hdr_time;Text;390;4;80;32;HH:MM
+climate_homey;nav_home;Hotspot;0;282;120;38;go homeyportal
+climate_homey;nav_back;Hotspot;360;282;120;38;go previous page
+scenes_homey;hdr_back;Hotspot;0;0;42;40;"Back; hidden on homeyportal"
+scenes_homey;hdr_icon;Text;48;4;32;32;icon font
+scenes_homey;hdr_title;Text;84;4;250;32;page title
+scenes_homey;hdr_time;Text;390;4;80;32;HH:MM
+scenes_homey;nav_home;Hotspot;0;282;120;38;go homeyportal
+scenes_homey;nav_back;Hotspot;360;282;120;38;go previous page
+ev_homey;hdr_back;Hotspot;0;0;42;40;"Back; hidden on homeyportal"
+ev_homey;hdr_icon;Text;48;4;32;32;icon font
+ev_homey;hdr_title;Text;84;4;250;32;page title
+ev_homey;hdr_time;Text;390;4;80;32;HH:MM
+ev_homey;nav_home;Hotspot;0;282;120;38;go homeyportal
+ev_homey;nav_back;Hotspot;360;282;120;38;go previous page
+battery_homey;hdr_back;Hotspot;0;0;42;40;"Back; hidden on homeyportal"
+battery_homey;hdr_icon;Text;48;4;32;32;icon font
+battery_homey;hdr_title;Text;84;4;250;32;page title
+battery_homey;hdr_time;Text;390;4;80;32;HH:MM
+battery_homey;nav_home;Hotspot;0;282;120;38;go homeyportal
+battery_homey;nav_back;Hotspot;360;282;120;38;go previous page
+media_homey;hdr_back;Hotspot;0;0;42;40;"Back; hidden on homeyportal"
+media_homey;hdr_icon;Text;48;4;32;32;icon font
+media_homey;hdr_title;Text;84;4;250;32;page title
+media_homey;hdr_time;Text;390;4;80;32;HH:MM
+media_homey;nav_home;Hotspot;0;282;120;38;go homeyportal
+media_homey;nav_back;Hotspot;360;282;120;38;go previous page
+door_homey;hdr_back;Hotspot;0;0;42;40;"Back; hidden on homeyportal"
+door_homey;hdr_icon;Text;48;4;32;32;icon font
+door_homey;hdr_title;Text;84;4;250;32;page title
+door_homey;hdr_time;Text;390;4;80;32;HH:MM
+door_homey;nav_home;Hotspot;0;282;120;38;go homeyportal
+door_homey;nav_back;Hotspot;360;282;120;38;go previous page
+menu_homey;hdr_back;Hotspot;0;0;42;40;"Back; hidden on homeyportal"
+menu_homey;hdr_icon;Text;48;4;32;32;icon font
+menu_homey;hdr_title;Text;84;4;250;32;page title
+menu_homey;hdr_time;Text;390;4;80;32;HH:MM
+menu_homey;nav_home;Hotspot;0;282;120;38;go homeyportal
+menu_homey;nav_back;Hotspot;360;282;120;38;go previous page
+homeyportal;tile01_bg;Picture;10;50;106;101;tile background
+homeyportal;tile01_icon;Text;18;58;40;40;HASP icon
+homeyportal;tile01_label;Text;18;104;90;22;label
+homeyportal;tile01_info;Text;18;127;90;18;state/info
+homeyportal;tile01_touch;Hotspot;10;50;106;101;short/long press event
+homeyportal;tile02_bg;Picture;127;50;106;101;tile background
+homeyportal;tile02_icon;Text;135;58;40;40;HASP icon
+homeyportal;tile02_label;Text;135;104;90;22;label
+homeyportal;tile02_info;Text;135;127;90;18;state/info
+homeyportal;tile02_touch;Hotspot;127;50;106;101;short/long press event
+homeyportal;tile03_bg;Picture;244;50;106;101;tile background
+homeyportal;tile03_icon;Text;252;58;40;40;HASP icon
+homeyportal;tile03_label;Text;252;104;90;22;label
+homeyportal;tile03_info;Text;252;127;90;18;state/info
+homeyportal;tile03_touch;Hotspot;244;50;106;101;short/long press event
+homeyportal;tile04_bg;Picture;361;50;106;101;tile background
+homeyportal;tile04_icon;Text;369;58;40;40;HASP icon
+homeyportal;tile04_label;Text;369;104;90;22;label
+homeyportal;tile04_info;Text;369;127;90;18;state/info
+homeyportal;tile04_touch;Hotspot;361;50;106;101;short/long press event
+homeyportal;tile05_bg;Picture;10;161;106;101;tile background
+homeyportal;tile05_icon;Text;18;169;40;40;HASP icon
+homeyportal;tile05_label;Text;18;215;90;22;label
+homeyportal;tile05_info;Text;18;238;90;18;state/info
+homeyportal;tile05_touch;Hotspot;10;161;106;101;short/long press event
+homeyportal;tile06_bg;Picture;127;161;106;101;tile background
+homeyportal;tile06_icon;Text;135;169;40;40;HASP icon
+homeyportal;tile06_label;Text;135;215;90;22;label
+homeyportal;tile06_info;Text;135;238;90;18;state/info
+homeyportal;tile06_touch;Hotspot;127;161;106;101;short/long press event
+homeyportal;tile07_bg;Picture;244;161;106;101;tile background
+homeyportal;tile07_icon;Text;252;169;40;40;HASP icon
+homeyportal;tile07_label;Text;252;215;90;22;label
+homeyportal;tile07_info;Text;252;238;90;18;state/info
+homeyportal;tile07_touch;Hotspot;244;161;106;101;short/long press event
+homeyportal;tile08_bg;Picture;361;161;106;101;tile background
+homeyportal;tile08_icon;Text;369;169;40;40;HASP icon
+homeyportal;tile08_label;Text;369;215;90;22;label
+homeyportal;tile08_info;Text;369;238;90;18;state/info
+homeyportal;tile08_touch;Hotspot;361;161;106;101;short/long press event
+climate_homey;cl_current;Text;110;55;150;55;current/set temp
+climate_homey;cl_minus;Hotspot;42;62;50;50;setpoint -
+climate_homey;cl_plus;Hotspot;280;62;50;50;setpoint +
+climate_homey;cl_mode_cool;Hotspot;15;130;100;65;cool
+climate_homey;cl_mode_heat;Hotspot;127;130;100;65;heat
+climate_homey;cl_mode_auto;Hotspot;239;130;100;65;auto
+climate_homey;cl_mode_dry;Hotspot;351;130;100;65;dry
+climate_homey;cl_fan;Hotspot;15;205;220;50;fan mode
+climate_homey;cl_swing;Hotspot;245;205;220;50;swing
+ev_homey;ev_state;Text;30;55;420;32;ev_state
+ev_homey;ev_soc;Text;30;100;420;32;ev_soc
+ev_homey;ev_time;Text;30;145;420;32;ev_time
+ev_homey;ev_energy;Text;30;180;420;32;ev_energy
+ev_homey;ev_current;Text;30;220;420;32;ev_current
+battery_homey;bat_soc;Text;165;60;150;70;SOC %
+battery_homey;bat_charge;Text;25;150;130;55;bat_charge
+battery_homey;bat_discharge;Text;175;150;130;55;bat_discharge
+battery_homey;bat_net;Text;325;150;130;55;bat_net
+battery_homey;bat_graph;Hotspot;20;220;210;45;open graph
+battery_homey;bat_settings;Hotspot;250;220;210;45;settings

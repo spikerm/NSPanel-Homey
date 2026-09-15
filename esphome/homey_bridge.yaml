@@ -1,0 +1,619 @@
+# Homey Standalone Bridge for Blackymas NSPanel HA Blueprint
+# Version 0.8.0
+#
+# Goal:
+# - Keep the existing v2026041 EU TFT/layout
+# - Replace the Home Assistant Blueprint with Homey
+# - Activate buttonpage01 and fill its 8 buttons from Homey
+# - Publish touchscreen button clicks through ESPHome Web API/SSE
+#
+# Homey command protocol:
+#   homey:init
+#   page:<page>
+#   text:<component>:<text>
+#   value:<component>:<number>
+#   vis:<component>:<0|1>
+#   button:<id>:<state>:<iconhex>:<r>:<g>:<b>:<font>:<bri>:<label>
+#   Example: button:button01:1:E6E8:255:255:255:8:75%:Woonkamer
+#   portal:init
+#   portal:navigate:<page>
+#   portal:header:<title>:<subtitle>:<temperature>
+#   portal:tile:<1..8>:<state>:<iconhex>:<info>:<label>
+#   raw:<nextion command>
+
+substitutions:
+  HOMEY_BRIDGE_VERSION: "0.8.0"
+  HOMEY_COMPAT_VERSION: "2026041"
+  HOMEY_PORTAL_TFT_URL: "http://wandpaneel.local/homey_portal.tft"
+
+globals:
+  - id: homey_portal_detected
+    type: bool
+    restore_value: false
+    initial_value: 'false'
+
+  - id: homey_portal_boot_redirect_done
+    type: bool
+    restore_value: false
+    initial_value: 'false'
+
+script:
+  # Satisfy the old Blueprint boot dependency locally.
+  - id: !extend boot_early_routines
+    then:
+      - lambda: |-
+          ESP_LOGI("homey.bridge", "Standalone Homey mode: initializing compatibility flags");
+
+          blueprint_status_flags.page_home = true;
+          blueprint_status_flags.page_qrcode = true;
+          blueprint_status_flags.relay_settings = true;
+          blueprint_status_flags.version = true;
+          blueprint_status_flags.hw_buttons_settings = true;
+          blueprint_status_flags.page_utilities = true;
+
+          system_flags.blueprint_ready = true;
+          system_flags.display_settings_received = true;
+          version_blueprint->publish_state("${HOMEY_COMPAT_VERSION}");
+
+  # Mirror Nextion touch events into a Web-API visible text sensor.
+  # Existing Blackymas code still processes the event too; this additional
+  # publisher is what lets Homey receive it without Home Assistant.
+  - id: !extend event_from_display
+    then:
+      - lambda: |-
+          // v0.7.2: log every raw localevent before filtering so Portal
+          // handshakes and future custom events are visible in ESPHome logs.
+          std::string raw_event;
+          for (int i = 0; i < params_count; i++) {
+            if (i > 0) raw_event += ",";
+            raw_event += params[i];
+          }
+          ESP_LOGI("homey.bridge", "Display localevent raw (%d): %s", params_count, raw_event.c_str());
+
+          if (params_count < 2) return;
+
+          const std::string &event = params[1];
+
+          // Custom TFT marker. The Homey Portal uses existing Blackymas page
+          // slots, so this marker tells us the display layout has been replaced.
+          if (event == "portal_ready" && params_count >= 3) {
+            id(homey_portal_detected) = true;
+            homey_portal_tft_version->publish_state(params[2]);
+            ESP_LOGI("homey.bridge", "Homey Portal TFT detected, version %s", params[2].c_str());
+            return;
+          }
+
+          if (event != "short_click" && event != "long_click") return;
+          if (params_count < 3) return;
+
+          static uint32_t homey_event_counter = 0;
+          homey_event_counter++;
+
+          std::string message = params[0];
+          message += "|";
+          message += event;
+          message += "|";
+          message += params[2];
+          message += "|";
+          message += std::to_string(homey_event_counter);
+
+          ESP_LOGI("homey.bridge", "Button event: %s", message.c_str());
+          homey_last_button->publish_state(message);
+
+# After the original Blackymas boot sequence has completed, switch once to
+# the physical home_smpl slot used by the Homey Portal.  The upstream wake-up
+# selector does not expose home_smpl, so this keeps the original boot logic
+# intact while making Portal the effective start page.
+interval:
+  - interval: 2s
+    then:
+      - lambda: |-
+          if (id(homey_portal_boot_redirect_done)) return;
+          if (!system_flags.blueprint_ready || !system_flags.boot_completed) return;
+          if (system_flags.tft_upload_active) return;
+
+          id(homey_portal_boot_redirect_done) = true;
+          ESP_LOGI("homey.bridge", "Boot complete: redirecting display to Homey Portal (home_smpl)");
+          disp1->send_command("api=1");
+          disp1->goto_page("home_smpl");
+
+text:
+  - platform: template
+    name: "Homey Display Command"
+    id: homey_display_command
+    mode: text
+    optimistic: true
+    min_length: 0
+    max_length: 240
+    restore_value: false
+    entity_category: config
+    on_value:
+      then:
+        - lambda: |-
+            if (x.empty()) return;
+
+            ESP_LOGD("homey.bridge", "Display command: %s", x.c_str());
+
+            auto starts_with = [&](const std::string &prefix) -> bool {
+              return x.rfind(prefix, 0) == 0;
+            };
+
+            if (x == "homey:init") {
+              // The original TFT redirects button pages to home while api == 0.
+              // The HA Blueprint used to set these globals. Homey now does it.
+              disp1->send_command("api=1");
+              disp1->send_command("is_buttonpage01=1");
+              disp1->send_command("is_buttonpage02=0");
+              disp1->send_command("is_buttonpage03=0");
+              disp1->send_command("is_buttonpage04=0");
+              disp1->send_command("is_entitypage01=0");
+              disp1->send_command("is_entitypage02=0");
+              disp1->send_command("is_entitypage03=0");
+              disp1->send_command("is_entitypage04=0");
+              ESP_LOGI("homey.bridge", "Nextion initialized for Homey buttonpage01");
+              return;
+            }
+
+            if (starts_with("page:")) {
+              const std::string page = x.substr(5);
+              if (page.empty()) return;
+              disp1->goto_page(page.c_str());
+              return;
+            }
+
+            if (starts_with("text:")) {
+              const size_t p1 = x.find(':', 5);
+              if (p1 == std::string::npos) return;
+              const std::string component = x.substr(5, p1 - 5);
+              const std::string value = x.substr(p1 + 1);
+              if (component.empty()) return;
+              disp1->set_component_text(component.c_str(), value.c_str());
+              return;
+            }
+
+            if (starts_with("value:")) {
+              const size_t p1 = x.find(':', 6);
+              if (p1 == std::string::npos) return;
+              const std::string component = x.substr(6, p1 - 6);
+              const std::string value_text = x.substr(p1 + 1);
+              if (component.empty() || value_text.empty()) return;
+
+              char *end = nullptr;
+              const long value = strtol(value_text.c_str(), &end, 10);
+              if (end == value_text.c_str() || *end != '\0') return;
+              disp1->set_component_value(component.c_str(), static_cast<int>(value));
+              return;
+            }
+
+            if (starts_with("vis:")) {
+              const size_t p1 = x.find(':', 4);
+              if (p1 == std::string::npos) return;
+              const std::string component = x.substr(4, p1 - 4);
+              const std::string visible = x.substr(p1 + 1);
+              if (component.empty() || (visible != "0" && visible != "1")) return;
+
+              disp1->send_command_printf("vis %s,%s", component.c_str(), visible.c_str());
+              return;
+            }
+
+            if (starts_with("button:")) {
+              // Blackymas-compatible button renderer.
+              //
+              // Protocol:
+              // button:<id>:<state>:<iconhex>:<r>:<g>:<b>:<font>:<bri>:<label>
+              //
+              // Example:
+              // button:button01:1:E6E8:255:255:255:8:75%:Woonkamer
+              //
+              // This mirrors esphome/nspanel_esphome_page_buttons.yaml:
+              // pic/text/icon/bri backgrounds, icon font/color, label/info
+              // and all visibility commands are applied exactly like the
+              // original Home Assistant API action.
+
+              std::vector<std::string> parts;
+              size_t pos = 7;
+              size_t next = std::string::npos;
+
+              // First 8 fields are colon-separated; the remaining tail is label.
+              for (int i = 0; i < 8; i++) {
+                next = x.find(':', pos);
+                if (next == std::string::npos) {
+                  ESP_LOGW("homey.bridge", "Bad button command (field %d): %s", i, x.c_str());
+                  return;
+                }
+                parts.push_back(x.substr(pos, next - pos));
+                pos = next + 1;
+              }
+              parts.push_back(x.substr(pos));
+
+              if (parts.size() != 9) {
+                ESP_LOGW("homey.bridge", "Bad button command field count");
+                return;
+              }
+
+              const std::string id = parts[0];
+              const bool state = parts[1] == "1";
+              std::string icon_hex = parts[2];
+              const int red   = atoi(parts[3].c_str());
+              const int green = atoi(parts[4].c_str());
+              const int blue  = atoi(parts[5].c_str());
+              const int icon_font = atoi(parts[6].c_str());
+              const std::string bri = parts[7];
+              const std::string label = parts[8];
+
+              if (id.size() != 8 || id.rfind("button", 0) != 0) {
+                ESP_LOGW("homey.bridge", "Invalid button id: %s", id.c_str());
+                return;
+              }
+              if (red < 0 || red > 255 || green < 0 || green > 255 || blue < 0 || blue > 255) {
+                ESP_LOGW("homey.bridge", "Invalid RGB for %s", id.c_str());
+                return;
+              }
+              if (icon_font < 0 || icon_font > 255) {
+                ESP_LOGW("homey.bridge", "Invalid font for %s", id.c_str());
+                return;
+              }
+
+              // Parse Unicode code point in hex (e.g. E6E8) and encode UTF-8.
+              if (icon_hex.rfind("U+", 0) == 0 || icon_hex.rfind("u+", 0) == 0)
+                icon_hex = icon_hex.substr(2);
+              if (icon_hex.rfind("0x", 0) == 0 || icon_hex.rfind("0X", 0) == 0)
+                icon_hex = icon_hex.substr(2);
+
+              char *icon_end = nullptr;
+              const uint32_t cp = strtoul(icon_hex.c_str(), &icon_end, 16);
+              if (icon_end == icon_hex.c_str() || *icon_end != '\0' || cp > 0x10FFFF) {
+                ESP_LOGW("homey.bridge", "Invalid icon codepoint '%s'", icon_hex.c_str());
+                return;
+              }
+
+              std::string icon;
+              if (cp <= 0x7F) {
+                icon.push_back(static_cast<char>(cp));
+              } else if (cp <= 0x7FF) {
+                icon.push_back(static_cast<char>(0xC0 | ((cp >> 6) & 0x1F)));
+                icon.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+              } else if (cp <= 0xFFFF) {
+                icon.push_back(static_cast<char>(0xE0 | ((cp >> 12) & 0x0F)));
+                icon.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+                icon.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+              } else {
+                icon.push_back(static_cast<char>(0xF0 | ((cp >> 18) & 0x07)));
+                icon.push_back(static_cast<char>(0x80 | ((cp >> 12) & 0x3F)));
+                icon.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+                icon.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+              }
+
+              std::vector<int> rgb = { red, green, blue };
+              const uint16_t icon_color = rgbTo565(rgb);
+
+              // Exact visual sequence from the original Blackymas button action.
+              disp1->set_component_picc((id + "pic").c_str(), state ? 47 : 46);
+              disp1->set_component_picc((id + "bri").c_str(), state ? 47 : 46);
+              disp1->set_component_picc((id + "text").c_str(), state ? 47 : 46);
+              disp1->set_component_picc((id + "icon").c_str(), state ? 47 : 46);
+
+              disp1->set_component_font((id + "icon").c_str(), icon_font);
+              disp1->set_component_foreground_color((id + "bri").c_str(), state ? 10597 : 65535);
+              disp1->set_component_foreground_color((id + "text").c_str(), state ? 10597 : 65535);
+              disp1->set_component_font_color((id + "icon").c_str(), icon_color);
+              disp1->set_component_text((id + "icon").c_str(), icon.c_str());
+
+              feed_wdt_delay(${DELAY_SHORT});
+
+              disp1->set_component_text(
+                (id + "text").c_str(),
+                wrapText(label.c_str(), 10, id(mui_bytes_per_char)).c_str()
+              );
+              disp1->set_component_text(
+                (id + "bri").c_str(),
+                (strcmp(bri.c_str(), "0") == 0 || bri.empty()) ? " " : bri.c_str()
+              );
+
+              disp1->send_command_printf("vis %s,1", (id + "pic").c_str());
+              disp1->send_command_printf("vis %s,1", (id + "icon").c_str());
+              disp1->send_command_printf("vis %s,1", (id + "text").c_str());
+              disp1->send_command_printf("vis %s,1", (id + "bri").c_str());
+              disp1->send_command_printf("vis %s,1", id.c_str());
+
+              ESP_LOGI(
+                "homey.bridge",
+                "Rendered %s state=%s icon=U+%s font=%d rgb=%d,%d,%d bri='%s' label='%s'",
+                id.c_str(), state ? "on" : "off", icon_hex.c_str(), icon_font,
+                red, green, blue, bri.c_str(), label.c_str()
+              );
+              return;
+            }
+
+
+            if (x == "portal:init") {
+              // IMPORTANT:
+              // Blackymas v2026041 firmware knows page IDs 0..29 only.
+              // We therefore reuse existing page slots instead of adding page 30+.
+              // home_smpl (ID 28) is the Homey Portal home screen.
+              disp1->send_command("api=1");
+              disp1->goto_page("home_smpl");
+              return;
+            }
+
+            if (starts_with("portal:navigate:")) {
+              const std::string target = x.substr(16);
+
+              // Logical Homey page -> existing Blackymas page slot.
+              // This keeps page IDs inside the firmware's page_names[] array.
+              const char* physical = nullptr;
+              if      (target == "homeyportal")       physical = "home_smpl";
+              else if (target == "room_lights")       physical = "weather01";
+              else if (target == "room_devices")      physical = "weather02";
+              else if (target == "climate_homey")     physical = "climate";
+              else if (target == "scenes_homey")      physical = "weather03";
+              else if (target == "ev_homey")          physical = "weather04";
+              else if (target == "battery_homey")     physical = "weather05";
+              else if (target == "media_homey")       physical = "media_player";
+              else if (target == "door_homey")        physical = "qrcode";
+              else if (target == "menu_homey")        physical = "utilities";
+              else if (target == "energy_homey")      physical = "utilities";
+              else if (target == "screensaver_homey") physical = "screensaver";
+
+              if (physical == nullptr) {
+                ESP_LOGW("homey.bridge", "Unknown Homey Portal page: %s", target.c_str());
+                return;
+              }
+
+              // Home is safe to open even before detection; its preinitialize
+              // event is what sets the portal_ready marker.
+              if (target == "homeyportal") {
+                disp1->goto_page(physical);
+                return;
+              }
+
+              if (!id(homey_portal_detected)) {
+                ESP_LOGW("homey.bridge", "Homey Portal TFT marker not detected yet; opening Portal home first");
+                disp1->goto_page("home_smpl");
+                return;
+              }
+
+              disp1->goto_page(physical);
+              return;
+            }
+
+            if (starts_with("portal:header:")) {
+              // portal:header:<title>:<subtitle>:<temperature>
+              std::vector<std::string> fields;
+              size_t p = 14;
+              for (int i = 0; i < 2; i++) {
+                size_t n = x.find(':', p);
+                if (n == std::string::npos) return;
+                fields.push_back(x.substr(p, n - p));
+                p = n + 1;
+              }
+              fields.push_back(x.substr(p));
+              if (fields.size() != 3) return;
+
+              if (id(homey_portal_detected)) {
+                disp1->set_component_text("p_title", fields[0].c_str());
+                disp1->set_component_text("p_subtitle", fields[1].c_str());
+                disp1->set_component_text("p_temp", fields[2].c_str());
+              } else {
+                // Legacy compatibility.
+                disp1->set_component_text("page_label", fields[0].c_str());
+              }
+              return;
+            }
+
+            if (starts_with("portal:tile:")) {
+              // portal:tile:<1..8>:<state>:<iconhex>:<info>:<label>
+              std::vector<std::string> fields;
+              size_t p = 12;
+              for (int i = 0; i < 4; i++) {
+                size_t n = x.find(':', p);
+                if (n == std::string::npos) return;
+                fields.push_back(x.substr(p, n - p));
+                p = n + 1;
+              }
+              fields.push_back(x.substr(p));
+              if (fields.size() != 5) return;
+
+              const int tile = atoi(fields[0].c_str());
+              if (tile < 1 || tile > 8) return;
+
+              char idbuf[16];
+              snprintf(idbuf, sizeof(idbuf), "button%02d", tile);
+              const std::string id = idbuf;
+              const bool state = fields[1] == "1";
+              std::string icon_hex = fields[2];
+              const std::string info = fields[3];
+              const std::string label = fields[4];
+
+              if (icon_hex.rfind("U+", 0) == 0 || icon_hex.rfind("u+", 0) == 0)
+                icon_hex = icon_hex.substr(2);
+              if (icon_hex.rfind("0x", 0) == 0 || icon_hex.rfind("0X", 0) == 0)
+                icon_hex = icon_hex.substr(2);
+
+              char *endp = nullptr;
+              const uint32_t cp = strtoul(icon_hex.c_str(), &endp, 16);
+              if (endp == icon_hex.c_str() || *endp != '\0' || cp > 0x10FFFF) return;
+
+              std::string icon;
+              if (cp <= 0x7F) {
+                icon.push_back(static_cast<char>(cp));
+              } else if (cp <= 0x7FF) {
+                icon.push_back(static_cast<char>(0xC0 | ((cp >> 6) & 0x1F)));
+                icon.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+              } else if (cp <= 0xFFFF) {
+                icon.push_back(static_cast<char>(0xE0 | ((cp >> 12) & 0x0F)));
+                icon.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+                icon.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+              } else {
+                icon.push_back(static_cast<char>(0xF0 | ((cp >> 18) & 0x07)));
+                icon.push_back(static_cast<char>(0x80 | ((cp >> 12) & 0x3F)));
+                icon.push_back(static_cast<char>(0x80 | ((cp >> 6) & 0x3F)));
+                icon.push_back(static_cast<char>(0x80 | (cp & 0x3F)));
+              }
+
+              if (id(homey_portal_detected)) {
+                char tile_name[20];
+                snprintf(tile_name, sizeof(tile_name), "tile%02d_touch", tile);
+
+                // The first custom Portal iteration uses one real Nextion Button
+                // per tile. Label/state are therefore applied directly to it.
+                disp1->set_component_text(tile_name, label.c_str());
+                disp1->set_component_background_color(tile_name, state ? 10597 : 4226);
+                disp1->set_component_font_color(tile_name, state ? 65535 : 50712);
+                disp1->set_component_visibility(tile_name, true);
+                return;
+              }
+
+              // Compatibility mapping to original Blackymas button components.
+              disp1->set_component_picc((id + "pic").c_str(), state ? 47 : 46);
+              disp1->set_component_picc((id + "bri").c_str(), state ? 47 : 46);
+              disp1->set_component_picc((id + "text").c_str(), state ? 47 : 46);
+              disp1->set_component_picc((id + "icon").c_str(), state ? 47 : 46);
+              disp1->set_component_font((id + "icon").c_str(), 8);
+              disp1->set_component_foreground_color((id + "bri").c_str(), state ? 10597 : 65535);
+              disp1->set_component_foreground_color((id + "text").c_str(), state ? 10597 : 65535);
+              disp1->set_component_font_color((id + "icon").c_str(), 65535);
+              disp1->set_component_text((id + "icon").c_str(), icon.c_str());
+              disp1->set_component_text((id + "text").c_str(), wrapText(label.c_str(), 10, id(mui_bytes_per_char)).c_str());
+              disp1->set_component_text((id + "bri").c_str(), info.empty() ? " " : info.c_str());
+
+              disp1->send_command_printf("vis %s,1", (id + "pic").c_str());
+              disp1->send_command_printf("vis %s,1", (id + "icon").c_str());
+              disp1->send_command_printf("vis %s,1", (id + "text").c_str());
+              disp1->send_command_printf("vis %s,1", (id + "bri").c_str());
+              disp1->send_command_printf("vis %s,1", id.c_str());
+              return;
+            }
+
+
+            if (starts_with("portal:energy:")) {
+              // portal:energy:<field>:<value>
+              const size_t p1 = x.find(':', 14);
+              if (p1 == std::string::npos) return;
+              const std::string field = x.substr(14, p1 - 14);
+              const std::string value = x.substr(p1 + 1);
+
+              const char* component = nullptr;
+              if      (field == "solar_power")   component = "sol_w";
+              else if (field == "solar_today")   component = "sol_day";
+              else if (field == "battery_soc")   component = "bat_soc";
+              else if (field == "battery_power") component = "bat_w";
+              else if (field == "battery_state") component = "bat_st";
+              else if (field == "ev_power")      component = "ev_w";
+              else if (field == "ev_current")    component = "ev_a";
+              else if (field == "ev_state")      component = "ev_st";
+              else if (field == "grid_power")    component = "grid_w";
+              else if (field == "grid_state")    component = "grid_st";
+              else if (field == "home_power")    component = "home_w";
+              else if (field == "time")          component = "e_time";
+              else if (field == "temperature")   component = "e_temp";
+
+              if (component == nullptr) {
+                ESP_LOGW("homey.bridge", "Unknown Energy field: %s", field.c_str());
+                return;
+              }
+
+              disp1->set_component_text(component, value.c_str());
+              ESP_LOGD("homey.bridge", "Energy %s -> %s = %s", field.c_str(), component, value.c_str());
+              return;
+            }
+
+            if (starts_with("raw:")) {
+              const std::string cmd = x.substr(4);
+              if (!cmd.empty()) disp1->send_command(cmd.c_str());
+              return;
+            }
+
+            // Backward-compatible raw command.
+            disp1->send_command(x.c_str());
+
+
+  - platform: template
+    name: "Homey Portal TFT URL"
+    id: homey_portal_tft_url
+    mode: text
+    optimistic: true
+    min_length: 0
+    max_length: 255
+    restore_value: true
+    initial_value: "${HOMEY_PORTAL_TFT_URL}"
+    entity_category: config
+    icon: "mdi:web"
+
+button:
+  - platform: template
+    name: "Upload Homey Portal TFT"
+    id: homey_portal_tft_upload
+    icon: "mdi:monitor-arrow-down"
+    entity_category: config
+    on_press:
+      then:
+        - lambda: |-
+            std::string url = homey_portal_tft_url->state;
+            if (url.empty()) {
+              url = "${HOMEY_PORTAL_TFT_URL}";
+            }
+
+            ESP_LOGI("homey.bridge", "Starting Homey Portal TFT upload from: %s", url.c_str());
+
+            if (system_flags.tft_upload_active) {
+              ESP_LOGW("homey.bridge", "TFT upload already active");
+              return;
+            }
+
+            // The upstream uploader deliberately waits 5 minutes after time sync.
+            // For Portal development we bypass that delay only for this button.
+            // uint32 arithmetic is intentional: elapsed becomes > 300000 ms.
+            id(first_time_synced_ms) = millis() - 300001UL;
+
+            ESP_LOGI("homey.bridge", "Portal upload: bypassing 5-minute startup wait");
+            upload_tft->execute(url.c_str());
+
+  - platform: template
+    name: "Upload Standard NSPanel EU TFT"
+    id: homey_standard_tft_upload
+    icon: "mdi:restore"
+    entity_category: config
+    on_press:
+      then:
+        - lambda: |-
+            if (system_flags.tft_upload_active) {
+              ESP_LOGW("homey.bridge", "TFT upload already active");
+              return;
+            }
+
+            ESP_LOGI("homey.bridge", "Restoring standard NSPanel EU TFT");
+            upload_tft->execute(
+              "https://raw.githubusercontent.com/Blackymas/NSPanel_HA_Blueprint/v2026041/hmi/nspanel_eu.tft"
+            );
+
+
+text_sensor:
+  - platform: template
+    name: "Homey Bridge Version"
+    id: homey_bridge_version
+    icon: "mdi:home-automation"
+    update_interval: 60s
+    lambda: |-
+      return {"${HOMEY_BRIDGE_VERSION}"};
+
+  - platform: template
+    name: "Homey Portal TFT Version"
+    id: homey_portal_tft_version
+    icon: "mdi:monitor-dashboard"
+    entity_category: diagnostic
+    update_interval: never
+
+  - platform: template
+    name: "Homey Last Button"
+    id: homey_last_button
+    icon: "mdi:gesture-tap-button"
+    update_interval: never
+
+binary_sensor:
+  - platform: template
+    name: "Homey Bridge Ready"
+    id: homey_bridge_ready
+    entity_category: diagnostic
+    lambda: |-
+      return system_flags.blueprint_ready && system_flags.boot_completed;
