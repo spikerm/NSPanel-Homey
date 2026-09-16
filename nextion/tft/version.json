@@ -1,0 +1,7 @@
+{
+  "version": "0.2.0",
+  "file": "nspanel_homey_portal.tft",
+  "url": "https://raw.githubusercontent.com/spikerm/nspanel-homey/main/nextion/tft/nspanel_homey_portal.tft",
+  "min_bridge_version": "0.8.1",
+  "channel": "stable"
+}
